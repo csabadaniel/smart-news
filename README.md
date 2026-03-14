@@ -7,7 +7,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 ## Tech Stack
 
 - Java 21 LTS (initial baseline), with planned upgrade validation for Java 25 LTS
-- Spring Boot 4.0.x (latest stable line; compatible with Java 17-25)
+- Spring Boot (version TBD; must support Java 21 baseline and planned validation on Java 25 LTS)
 - Maven
 - Gemini API (Google AI)
 - Email delivery via SMTP or email API provider
@@ -26,7 +26,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 ## Iteration Process
 
 - Each iteration is delivered through one pull request.
-- Create a branch per iteration using iteration/<number>-<topic> naming.
+- Create a branch per iteration using `iteration/<number>-<topic>` naming.
 - Keep each iteration small and focused on one goal.
 - Do not push directly to main.
 - Require CI to pass before merge.
