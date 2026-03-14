@@ -14,3 +14,11 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - Docker
 - GitHub Actions
 - Google Cloud: Cloud Run (container runtime), Cloud Scheduler, Artifact Registry, Secret Manager
+
+## Constraints
+
+- Must stay free-tier-friendly on Google Cloud for low-volume usage.
+- Must run reliably on schedule even when the service scales to zero.
+- Must keep secrets out of source control and use managed secret storage.
+- Must provide traceable CI/CD from GitHub to container deployment.
+- Must keep the architecture simple enough for iterative learning and delivery.
