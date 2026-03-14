@@ -22,3 +22,12 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - Must keep secrets out of source control and use managed secret storage.
 - Must provide traceable CI/CD from GitHub to container deployment.
 - Must keep the architecture simple enough for iterative learning and delivery.
+
+## Iteration Process
+
+- Each iteration is delivered through one pull request.
+- Create a branch per iteration using iteration/<number>-<topic> naming.
+- Keep each iteration small and focused on one goal.
+- Do not push directly to main.
+- Require CI to pass before merge.
+- Prefer squash merge to keep history clean and readable.
