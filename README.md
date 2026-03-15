@@ -34,8 +34,8 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 ## Iterations
 
-| # | Goal | Branch | Status |
-|---|------|--------|--------|
-| 01 | Document project intent and workflow | iteration/01-project-intent | Merged |
-| 02 | Build the base service responding to an external API call | iteration/02-base-service-external-api | In progress |
-| 03 | Deploy the base service to GCP Cloud Run | iteration/03-deploy-to-gcp | Planned |
+| #   | Goal                                                      | Branch                                 | Status      |
+| --- | --------------------------------------------------------- | -------------------------------------- | ----------- |
+| 01  | Document project intent and workflow                      | iteration/01-project-intent            | Merged      |
+| 02  | Build the base service responding to an external API call | iteration/02-base-service-external-api | In progress |
+| 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Planned     |

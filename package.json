@@ -1,0 +1,13 @@
+{
+  "name": "smart-news",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Formatting support for non-Java files",
+  "scripts": {
+    "format:prettier": "prettier --write \"**/*.{md,yml,yaml,json}\"",
+    "lint:prettier": "prettier --check \"**/*.{md,yml,yaml,json}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
