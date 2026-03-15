@@ -24,6 +24,6 @@ Output requirements:
 - Current branch status
 
 Constraints:
-- If comment URL/ID is missing, stop and ask for it.
+- If comment URL/ID is missing, infer it from conversation history (recent PR comment fixes, open files, git diff) before asking. Only stop and ask if it cannot be determined from context.
 - Do not touch unrelated files.
 - Do not merge PR.
