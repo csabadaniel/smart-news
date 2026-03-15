@@ -1,5 +1,5 @@
 ---
-name: "Finalize PR Comment Fix"
+name: "pr.finalize"
 description: "Use when: commit current fix, push it, reply to the PR comment, and resolve that review thread."
 argument-hint: "PR number and review comment URL or comment ID"
 agent: "agent"

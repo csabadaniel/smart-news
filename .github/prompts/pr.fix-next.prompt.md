@@ -1,5 +1,5 @@
 ---
-name: "Fix Next PR Comment"
+name: "pr.fix-next"
 description: "Use when: address the next unresolved pull request review comment and stop before commit."
 argument-hint: "PR number (e.g. 4), optional owner/repo"
 agent: "agent"
