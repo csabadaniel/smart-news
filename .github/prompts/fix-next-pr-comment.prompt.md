@@ -7,7 +7,7 @@ agent: "agent"
 Address the next unresolved review thread on the target pull request.
 
 Workflow:
-1. Determine target PR from the argument. If owner/repo is not provided, use the current repository.
+1. Determine target PR from the argument. If owner/repo is not provided, use the current repository. If PR number is not provided, list open PRs in the repository: if there is exactly one, use it automatically; if there are multiple, stop and ask the user to specify a PR number.
 2. List unresolved review threads ordered oldest first.
 3. Pick the first unresolved thread.
 4. Implement the minimal fix in the current branch.
