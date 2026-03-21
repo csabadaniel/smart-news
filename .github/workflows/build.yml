@@ -35,3 +35,20 @@ jobs:
 
       - name: Build and verify
         run: ./mvnw -B verify
+
+      - name: Build Docker image
+        run: docker build -t smart-news:ci .
+
+      - name: Test Docker image
+        run: |
+          docker run --rm -d -p 8080:8080 --name test-container smart-news:ci
+          sleep 5
+          RESPONSE=$(curl -s http://localhost:8080/actuator/health)
+          docker stop test-container
+          if echo "$RESPONSE" | grep -q '"status":"UP"'; then
+            echo "Health check passed"
+            exit 0
+          else
+            echo "Health check failed: $RESPONSE"
+            exit 1
+          fi
