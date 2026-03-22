@@ -117,7 +117,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
         <executions>
           <execution>
             <id>checkstyle-check</id>
-            <phase>verify</phase>
+            <phase>validate</phase>
             <goals>
               <goal>check</goal>
             </goals>
