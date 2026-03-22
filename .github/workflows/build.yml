@@ -1,0 +1,108 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Ensure Maven wrapper is executable
+        run: chmod +x mvnw
+
+      - name: Build and verify
+        run: ./mvnw -B verify
+
+      - name: Build Docker image
+        run: docker build -t smart-news:ci .
+
+      - name: Test Docker image
+        run: |
+          docker run --rm -d -p 8080:8080 --name test-container smart-news:ci
+          MAX_WAIT_SECONDS=60
+          SLEEP_SECONDS=2
+          ELAPSED=0
+          RESPONSE=""
+
+          while [ "$ELAPSED" -lt "$MAX_WAIT_SECONDS" ]; do
+            RESPONSE=$(curl -s http://localhost:8080/actuator/health || true)
+            if echo "$RESPONSE" | grep -q '"status":"UP"'; then
+              echo "Health check passed"
+              docker stop test-container
+              exit 0
+            fi
+            sleep "$SLEEP_SECONDS"
+            ELAPSED=$((ELAPSED + SLEEP_SECONDS))
+          done
+
+          echo "Health check failed after ${MAX_WAIT_SECONDS}s: $RESPONSE"
+          echo "Container logs:"
+          docker logs test-container || true
+          docker stop test-container || true
+          exit 1
+
+  deploy:
+    needs: build
+    # Deploy only on explicit manual request or after pushes to main.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker to use gcloud credentials
+        run: gcloud auth configure-docker europe-west2-docker.pkg.dev
+
+      - name: Build Docker image
+        run: docker build -t smart-news:ci .
+
+      - name: Push Docker image to Artifact Registry
+        run: |
+          IMAGE_TAG="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
+          docker tag smart-news:ci "$IMAGE_TAG"
+          docker push "$IMAGE_TAG"
+          docker tag smart-news:ci "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+          docker push "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE_URL="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
+          gcloud run deploy smart-news \
+            --image "$IMAGE_URL" \
+            --region europe-west2 \
+            --platform managed \
+            --no-allow-unauthenticated

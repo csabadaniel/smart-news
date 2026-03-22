@@ -36,6 +36,22 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 | #   | Goal                                                      | Branch                                 | Status      |
 | --- | --------------------------------------------------------- | -------------------------------------- | ----------- |
-| 01  | Document project intent and workflow                      | iteration/01-project-intent            | Merged      |
+| 01  | Document project intent and workflow                      | iteration/01-project-intent            | Completed   |
 | 02  | Build the base service responding to an external API call | iteration/02-base-service-external-api | Completed   |
-| 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Planned     |
+| 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Completed   |
+
+## Deploy to GCP Cloud Run
+
+### Setup
+
+- GitHub Actions secrets (Settings -> Secrets and variables -> Actions):
+  - `GCP_PROJECT_ID`
+  - `GCP_WORKLOAD_IDENTITY_PROVIDER`
+  - `GCP_SERVICE_ACCOUNT`
+
+### Non-obvious behavior
+
+- Build runs on every push and pull request.
+- Deployment runs only on manual `workflow_dispatch` requests and pushes to `main`.
+- Deployment does not require a separate approval step.
+- Docker image is pushed to Artifact Registry as part of the deploy job.
