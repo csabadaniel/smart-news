@@ -16,7 +16,7 @@ FROM gcr.io/distroless/java21-debian12:nonroot
 
 WORKDIR /app
 
-COPY --from=builder /build/target/smart-news-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /build/target/*.jar app.jar
 
 EXPOSE 8080
 
