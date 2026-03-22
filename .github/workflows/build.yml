@@ -93,4 +93,4 @@ jobs:
             --image "$IMAGE_URL" \
             --region europe-west2 \
             --platform managed \
-            --allow-unauthenticated
+            --no-allow-unauthenticated
