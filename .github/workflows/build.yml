@@ -40,16 +40,27 @@ jobs:
       - name: Test Docker image
         run: |
           docker run --rm -d -p 8080:8080 --name test-container smart-news:ci
-          sleep 5
-          RESPONSE=$(curl -s http://localhost:8080/actuator/health)
-          docker stop test-container
-          if echo "$RESPONSE" | grep -q '"status":"UP"'; then
-            echo "Health check passed"
-            exit 0
-          else
-            echo "Health check failed: $RESPONSE"
-            exit 1
-          fi
+          MAX_WAIT_SECONDS=60
+          SLEEP_SECONDS=2
+          ELAPSED=0
+          RESPONSE=""
+
+          while [ "$ELAPSED" -lt "$MAX_WAIT_SECONDS" ]; do
+            RESPONSE=$(curl -s http://localhost:8080/actuator/health || true)
+            if echo "$RESPONSE" | grep -q '"status":"UP"'; then
+              echo "Health check passed"
+              docker stop test-container
+              exit 0
+            fi
+            sleep "$SLEEP_SECONDS"
+            ELAPSED=$((ELAPSED + SLEEP_SECONDS))
+          done
+
+          echo "Health check failed after ${MAX_WAIT_SECONDS}s: $RESPONSE"
+          echo "Container logs:"
+          docker logs test-container || true
+          docker stop test-container || true
+          exit 1
 
   deploy:
     needs: build
