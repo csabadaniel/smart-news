@@ -52,3 +52,23 @@ jobs:
             echo "Health check failed: $RESPONSE"
             exit 1
           fi
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker to use gcloud credentials
+        run: gcloud auth configure-docker europe-west2-docker.pkg.dev
+
+      - name: Push Docker image to Artifact Registry
+        run: |
+          IMAGE_TAG="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
+          docker tag smart-news:ci "$IMAGE_TAG"
+          docker push "$IMAGE_TAG"
+          docker tag smart-news:ci "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+          docker push "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
