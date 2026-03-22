@@ -18,19 +18,30 @@ class SmartNewsApplicationTests {
     @Value("${local.server.port}")
     private int port;
 
+    private final HttpClient client = HttpClient.newHttpClient();
+
     @Test
     void contextLoads() {
     }
 
     @Test
     void actuatorHealthIsUp() throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:" + port + "/actuator/health")).GET().build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
         assertEquals("UP", JsonPath.<String>read(response.body(), "$.status"));
+    }
+
+    @Test
+    void newsEndpointReturnsNewsAsJsonString() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:" + port + "/news")).GET().build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
+        assertEquals("Smart news will be returned here.", JsonPath.<String>read(response.body(), "$.news"));
     }
 
 }
