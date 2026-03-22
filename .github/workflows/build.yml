@@ -73,3 +73,13 @@ jobs:
           docker push "$IMAGE_TAG"
           docker tag smart-news:ci "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
           docker push "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+
+      - name: Deploy to Cloud Run
+        if: github.event_name == 'push'
+        run: |
+          IMAGE_URL="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+          gcloud run deploy smart-news \
+            --image "$IMAGE_URL" \
+            --region europe-west2 \
+            --platform managed \
+            --allow-unauthenticated
