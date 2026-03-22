@@ -33,6 +33,6 @@ class NewsControllerTest {
 
         mockMvc.perform(get("/news"))
                 .andExpect(status().isOk())
-            .andExpect(jsonPath("$.news").value("Smart news will be returned here."));
+                .andExpect(jsonPath("$.news").value("Smart news will be returned here."));
     }
 }
