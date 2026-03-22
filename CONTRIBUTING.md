@@ -32,6 +32,16 @@ This repository uses **Conventional Commits** format for all commit messages.
 - Do not end with a period
 - Be descriptive but concise
 
+## Testing Approach
+
+This project follows London-school TDD (outside-in, interaction-focused).
+
+### Expectations
+- Start from behavior at the boundary (controller/service API) and drive implementation inward.
+- Prefer focused unit tests with test doubles for collaborators.
+- Verify collaboration and contract boundaries where behavior depends on interactions.
+- Keep a smaller set of integration tests for wiring and end-to-end confidence.
+
 ## Deployment Policy
 
 - Current setup deploys a single production service.
