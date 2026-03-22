@@ -31,3 +31,9 @@ This repository uses **Conventional Commits** format for all commit messages.
 - Use imperative mood (e.g., "add" not "added")
 - Do not end with a period
 - Be descriptive but concise
+
+## Deployment Policy
+
+- Current setup uses a single deployment environment (`production`).
+- Deployments may be triggered from any pushed branch.
+- The release gate is required `production` environment approval, not branch name.

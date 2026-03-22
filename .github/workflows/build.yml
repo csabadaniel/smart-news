@@ -53,6 +53,7 @@ jobs:
 
   deploy:
     needs: build
+    # Single-environment policy: allow deploy from any pushed branch after production approval.
     if: github.event_name == 'push'
     environment: production
     runs-on: ubuntu-latest

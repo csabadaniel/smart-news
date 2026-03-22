@@ -56,5 +56,6 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 - Build runs on every push and pull request.
 - Deployment is approval-gated via the `production` environment.
+- Deployment can be approved from any branch (single-environment policy).
 - If approval is not given within 15 minutes, deployment times out.
 - Docker image is pushed to Artifact Registry only after approval (to reduce free-tier usage).
