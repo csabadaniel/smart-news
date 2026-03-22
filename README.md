@@ -39,6 +39,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 01  | Document project intent and workflow                      | iteration/01-project-intent            | Completed   |
 | 02  | Build the base service responding to an external API call | iteration/02-base-service-external-api | Completed   |
 | 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Completed   |
+| 04  | Integrate Gemini API to generate content from a prompt    | iteration/04-gemini-api-integration    | In Progress |
 
 ## Deploy to GCP Cloud Run
 
