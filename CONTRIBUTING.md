@@ -34,6 +34,7 @@ This repository uses **Conventional Commits** format for all commit messages.
 
 ## Deployment Policy
 
-- Current setup uses a single deployment environment (`production`).
-- Deployments may be triggered from any pushed branch.
-- The release gate is required `production` environment approval, not branch name.
+- Current setup deploys a single production service.
+- CI build and Docker verification run on every push and pull request.
+- Deployments run only when triggered manually via `workflow_dispatch` or automatically from pushes to `main`.
+- Deployments do not require a separate approval step.

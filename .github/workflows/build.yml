@@ -64,9 +64,8 @@ jobs:
 
   deploy:
     needs: build
-    # Single-environment policy: allow deploy from any pushed branch after production approval.
-    if: github.event_name == 'push'
-    environment: production
+    # Deploy only on explicit manual request or automatically after merges to main.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     timeout-minutes: 15
 

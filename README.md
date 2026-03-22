@@ -48,14 +48,10 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
   - `GCP_PROJECT_ID`
   - `GCP_WORKLOAD_IDENTITY_PROVIDER`
   - `GCP_SERVICE_ACCOUNT`
-- GitHub environment (Settings -> Environments):
-  - Create `production`
-  - Enable Required reviewers
 
 ### Non-obvious behavior
 
 - Build runs on every push and pull request.
-- Deployment is approval-gated via the `production` environment.
-- Deployment can be approved from any branch (single-environment policy).
-- If approval is not given within 15 minutes, deployment times out.
-- Docker image is pushed to Artifact Registry only after approval (to reduce free-tier usage).
+- Deployment runs only on manual `workflow_dispatch` requests and pushes to `main`.
+- Deployment does not require a separate approval step.
+- Docker image is pushed to Artifact Registry as part of the deploy job.
