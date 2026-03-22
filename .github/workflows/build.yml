@@ -63,8 +63,8 @@ jobs:
 
   deploy:
     needs: build
-    # Temporary pre-merge policy: allow deploys from branch pushes until this workflow lands on main.
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    # Deploy only on explicit manual request or after pushes to main.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     permissions:
       contents: read
       id-token: write
