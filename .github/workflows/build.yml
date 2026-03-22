@@ -3,9 +3,6 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-      - iteration/03-deploy-to-gcp
   pull_request:
 
 permissions:
