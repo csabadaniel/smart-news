@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
   group: build-${{ github.ref }}
@@ -66,6 +65,9 @@ jobs:
     needs: build
     # Temporary pre-merge policy: allow deploys from branch pushes until this workflow lands on main.
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
