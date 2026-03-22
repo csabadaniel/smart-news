@@ -54,6 +54,17 @@ jobs:
             exit 1
           fi
 
+  deploy:
+    needs: build
+    if: github.event_name == 'push'
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v3
         with:
@@ -66,6 +77,9 @@ jobs:
       - name: Configure Docker to use gcloud credentials
         run: gcloud auth configure-docker europe-west2-docker.pkg.dev
 
+      - name: Build Docker image
+        run: docker build -t smart-news:ci .
+
       - name: Push Docker image to Artifact Registry
         run: |
           IMAGE_TAG="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
@@ -75,7 +89,6 @@ jobs:
           docker push "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
 
       - name: Deploy to Cloud Run
-        if: github.event_name == 'push'
         run: |
           IMAGE_URL="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
           gcloud run deploy smart-news \
