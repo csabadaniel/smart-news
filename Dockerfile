@@ -5,7 +5,6 @@ WORKDIR /build
 
 COPY pom.xml .
 COPY mvnw .
-COPY mvnw.cmd .
 COPY .mvn .mvn
 
 COPY src src
