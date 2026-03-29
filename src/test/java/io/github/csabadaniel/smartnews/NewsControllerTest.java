@@ -14,6 +14,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(NewsController.class)
 class NewsControllerTest {
 
+    private static final String NEWS_ENDPOINT = "/news";
+    private static final String NEWS_RESPONSE = "Top story: TDD works.";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -22,11 +25,11 @@ class NewsControllerTest {
 
     @Test
     void shouldReturnNewsFromService() throws Exception {
-        when(newsService.getNews()).thenReturn("Top story: TDD works.");
+        when(newsService.getNews()).thenReturn(NEWS_RESPONSE);
 
-        mockMvc.perform(get("/news"))
+        mockMvc.perform(get(NEWS_ENDPOINT))
             .andExpect(status().isOk())
-            .andExpect(content().string("Top story: TDD works."));
+            .andExpect(content().string(NEWS_RESPONSE));
     }
 
 }

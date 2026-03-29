@@ -14,14 +14,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class SmartNewsApplicationTests {
 
+    private static final String HEALTH_ENDPOINT = "/actuator/health";
+    private static final String STATUS_PATH = "$.status";
+    private static final String HEALTH_STATUS_UP = "UP";
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void actuatorHealthIsUp() throws Exception {
-        mockMvc.perform(get("/actuator/health"))
+        mockMvc.perform(get(HEALTH_ENDPOINT))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status").value("UP"));
+            .andExpect(jsonPath(STATUS_PATH).value(HEALTH_STATUS_UP));
     }
 
 }
