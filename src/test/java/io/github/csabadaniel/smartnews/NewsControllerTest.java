@@ -28,8 +28,8 @@ class NewsControllerTest {
         when(newsService.getNews()).thenReturn(NEWS_RESPONSE);
 
         mockMvc.perform(get(NEWS_ENDPOINT))
-            .andExpect(status().isOk())
-            .andExpect(content().string(NEWS_RESPONSE));
+                .andExpect(status().isOk())
+                .andExpect(content().string(NEWS_RESPONSE));
     }
 
 }

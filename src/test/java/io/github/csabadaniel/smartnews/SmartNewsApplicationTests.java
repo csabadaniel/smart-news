@@ -24,8 +24,8 @@ class SmartNewsApplicationTests {
     @Test
     void actuatorHealthIsUp() throws Exception {
         mockMvc.perform(get(HEALTH_ENDPOINT))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath(STATUS_PATH).value(HEALTH_STATUS_UP));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(STATUS_PATH).value(HEALTH_STATUS_UP));
     }
 
 }
