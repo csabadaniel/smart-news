@@ -103,10 +103,13 @@ jobs:
           docker push "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
 
       - name: Deploy to Cloud Run
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           IMAGE_URL="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
           gcloud run deploy smart-news \
             --image "$IMAGE_URL" \
             --region europe-west2 \
             --platform managed \
-            --no-allow-unauthenticated
+            --no-allow-unauthenticated \
+            --set-env-vars "GEMINI_API_KEY=$GEMINI_API_KEY"
