@@ -38,5 +38,11 @@ spring:
     gcp:
       parametermanager:
         enabled: true
+  ai:
+    google:
+      genai:
+        chat:
+          options:
+            model: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-model/versions/latest}
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
