@@ -1,17 +1,19 @@
 news:
-  prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
+  prompt: "Give me today's top news summary."
 
 spring:
   application:
     name: smart-news
-  config:
-    import: "pm@"
+  cloud:
+    gcp:
+      parametermanager:
+        enabled: false
   ai:
     retry:
       max-attempts: 1
     google:
       genai:
-        api-key: ${GEMINI_API_KEY:dummy-key}
+        api-key: dummy-key
         chat:
           options:
             model: gemini-2.5-flash
