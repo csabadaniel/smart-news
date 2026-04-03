@@ -2,6 +2,8 @@ spring:
   application:
     name: smart-news
   ai:
+    retry:
+      max-attempts: 1
     google:
       genai:
         api-key: ${GEMINI_API_KEY:dummy-key}
