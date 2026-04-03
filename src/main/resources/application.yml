@@ -17,6 +17,7 @@ spring:
         chat:
           options:
             model: gemini-2.5-flash
+            max-output-tokens: 2048
 
 management:
   endpoints:
@@ -44,5 +45,6 @@ spring:
         chat:
           options:
             model: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-model/versions/latest}
+            max-output-tokens: 2048
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
