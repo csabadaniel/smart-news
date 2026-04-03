@@ -1,3 +1,6 @@
+news:
+  prompt: "Give me today's top news summary."
+
 spring:
   application:
     name: smart-news
