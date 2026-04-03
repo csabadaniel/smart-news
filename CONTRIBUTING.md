@@ -32,6 +32,34 @@ This repository uses **Conventional Commits** format for all commit messages.
 - Do not end with a period
 - Be descriptive but concise
 
+## Code Practices
+
+- **Extract magic strings**: Define hardcoded strings in both test and production code as `private static final String` constants with semantic names
+  - Example: `private static final String NEWS_PROMPT = "Give me today's top news summary.";`
+  - This improves readability, maintainability, and consistency across the codebase
+- **Use Lombok annotations**: Leverage `@RequiredArgsConstructor`, `@Getter`, etc. to reduce boilerplate for constructor injection and field access
+- **Prefer direct injection**: Use constructor injection over setter injection for required dependencies
+
+## Testing Strategy
+
+This project uses **London School Test-Driven Development (TDD)** for implementation.
+
+### London School TDD Principles
+- **Test-first approach**: Write tests before implementation
+- **Behavior-driven**: Focus on what the code should do, not implementation details
+- **Mock dependencies**: Use mocks and stubs to isolate units under test
+- **Outside-in development**: Start from the public API and work inward
+- **Collaboration through tests**: Tests serve as executable specifications and living documentation
+
+### Testing Guidelines
+- Write unit tests for all public methods and services
+- Use mocks for external dependencies (APIs, databases, file systems)
+- Name tests descriptively: Use imperative mood (e.g., `shouldGenerateNewsFromValidPrompt`, `throwsExceptionForInvalidInput`)
+- Keep tests focused on behavior, not implementation
+- Ensure tests are deterministic and isolated
+- Aim for high test coverage on business logic and services
+- Extract string constants: define hardcoded strings (endpoints, prompts, expected values) as `private static final String` constants at the class level for readability, maintenance, and consistency
+
 ## Deployment Policy
 
 - Current setup deploys a single production service.

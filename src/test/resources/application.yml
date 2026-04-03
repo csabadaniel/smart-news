@@ -1,0 +1,29 @@
+news:
+  prompt: "Give me today's top news summary."
+
+spring:
+  application:
+    name: smart-news
+  cloud:
+    gcp:
+      parametermanager:
+        enabled: false
+  ai:
+    retry:
+      max-attempts: 1
+    google:
+      genai:
+        api-key: dummy-key
+        chat:
+          options:
+            model: gemini-2.5-flash
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true

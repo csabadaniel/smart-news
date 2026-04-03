@@ -6,6 +6,7 @@ WORKDIR /build
 COPY pom.xml .
 COPY mvnw .
 COPY .mvn .mvn
+COPY lombok.config .
 
 COPY src src
 

@@ -8,12 +8,14 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 - Java 21 LTS (initial baseline), with planned upgrade validation for Java 25 LTS
 - Spring Boot (version TBD; must support Java 21 baseline and planned validation on Java 25 LTS)
+- Spring AI
 - Maven
+- Lombok
 - Gemini API (Google AI)
 - Email delivery via SMTP or email API provider
 - Docker
 - GitHub Actions
-- Google Cloud: Cloud Run (container runtime), Cloud Scheduler, Artifact Registry, Secret Manager
+- Google Cloud: Cloud Run (container runtime), Cloud Scheduler, Artifact Registry, Secret Manager, Parameter Manager
 
 ## Constraints
 
@@ -39,6 +41,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 01  | Document project intent and workflow                      | iteration/01-project-intent            | Completed   |
 | 02  | Build the base service responding to an external API call | iteration/02-base-service-external-api | Completed   |
 | 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Completed   |
+| 04  | Integrate with Gemini API for content generation          | iteration/04-gemini-integration        | In Progress |
 
 ## Deploy to GCP Cloud Run
 
@@ -48,6 +51,11 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
   - `GCP_PROJECT_ID`
   - `GCP_WORKLOAD_IDENTITY_PROVIDER`
   - `GCP_SERVICE_ACCOUNT`
+- GCP Secret Manager secrets:
+  - `gemini-api-key`: the Gemini API key used by the service on Cloud Run
+- GCP Parameter Manager parameters (global, latest version):
+  - `smart-news-model`: the Gemini model name (e.g. `gemini-2.5-flash`)
+  - `smart-news-prompt`: the prompt sent to Gemini on each `/news` request
 
 ### Non-obvious behavior
 
@@ -55,3 +63,13 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - Deployment runs only on manual `workflow_dispatch` requests and pushes to `main`.
 - Deployment does not require a separate approval step.
 - Docker image is pushed to Artifact Registry as part of the deploy job.
+- `GEMINI_API_KEY` is mounted from GCP Secret Manager on Cloud Run; it is not set as a plain environment variable.
+- The `gcp` Spring profile is activated on Cloud Run; it enables GCP Parameter Manager to supply the model name and prompt at runtime.
+- Prompt and model can be updated without redeployment by creating a new parameter version and calling `POST /actuator/refresh`. The endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
+
+## Running locally
+
+- Set `GEMINI_API_KEY` to a valid Gemini API key in your shell environment.
+- Run the application with `./mvnw spring-boot:run`.
+- Call `GET http://localhost:8080/news` to trigger a Gemini prompt and receive the generated response.
+- Without `GEMINI_API_KEY`, the application starts with a placeholder key; calls to `/news` will fail with an authentication error from the Gemini API.

@@ -38,7 +38,8 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run --rm -d -p 8080:8080 --name test-container smart-news:ci
+          docker run --rm -d -p 8080:8080 \
+            --name test-container smart-news:ci
           MAX_WAIT_SECONDS=60
           SLEEP_SECONDS=2
           ELAPSED=0
@@ -105,4 +106,7 @@ jobs:
             --image "$IMAGE_URL" \
             --region europe-west2 \
             --platform managed \
-            --no-allow-unauthenticated
+            --no-allow-unauthenticated \
+            --remove-env-vars "GEMINI_API_KEY" \
+            --update-secrets "GEMINI_API_KEY=gemini-api-key:latest" \
+            --update-env-vars "SPRING_PROFILES_ACTIVE=gcp"

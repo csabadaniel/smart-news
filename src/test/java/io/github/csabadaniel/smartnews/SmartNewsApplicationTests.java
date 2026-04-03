@@ -1,36 +1,31 @@
 package io.github.csabadaniel.smartnews;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
-import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
 class SmartNewsApplicationTests {
 
-    @Value("${local.server.port}")
-    private int port;
+    private static final String HEALTH_ENDPOINT = "/actuator/health";
+    private static final String STATUS_PATH = "$.status";
+    private static final String HEALTH_STATUS_UP = "UP";
 
-    @Test
-    void contextLoads() {
-    }
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
     void actuatorHealthIsUp() throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:" + port + "/actuator/health")).GET().build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        assertEquals(200, response.statusCode());
-        assertEquals("UP", JsonPath.<String>read(response.body(), "$.status"));
+        mockMvc.perform(get(HEALTH_ENDPOINT))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(STATUS_PATH).value(HEALTH_STATUS_UP));
     }
 
 }
