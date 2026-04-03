@@ -23,7 +23,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, refresh
+        include: health
   endpoint:
     health:
       probes:
@@ -48,3 +48,8 @@ spring:
             max-output-tokens: 2048
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, refresh
