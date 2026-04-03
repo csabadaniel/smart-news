@@ -9,7 +9,7 @@ spring:
         api-key: ${GEMINI_API_KEY:dummy-key}
         chat:
           options:
-            model: gemini-2.0-flash
+            model: gemini-2.5-flash
 
 management:
   endpoints:
