@@ -65,7 +65,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - Docker image is pushed to Artifact Registry as part of the deploy job.
 - `GEMINI_API_KEY` is mounted from GCP Secret Manager on Cloud Run; it is not set as a plain environment variable.
 - The `gcp` Spring profile is activated on Cloud Run; it enables GCP Parameter Manager to supply the model name and prompt at runtime.
-- Prompt and model can be updated without redeployment by creating a new parameter version and calling `POST /actuator/refresh`.
+- Prompt and model can be updated without redeployment by creating a new parameter version and calling `POST /actuator/refresh`. The endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
 
 ## Running locally
 
