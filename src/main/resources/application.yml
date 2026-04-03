@@ -1,11 +1,13 @@
 news:
-  prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
+  prompt: "Give me today's top news summary."
 
 spring:
   application:
     name: smart-news
-  config:
-    import: "pm@"
+  cloud:
+    gcp:
+      parametermanager:
+        enabled: false
   ai:
     retry:
       max-attempts: 1
@@ -25,3 +27,16 @@ management:
     health:
       probes:
         enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: gcp
+    import: "pm@"
+  cloud:
+    gcp:
+      parametermanager:
+        enabled: true
+news:
+  prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}

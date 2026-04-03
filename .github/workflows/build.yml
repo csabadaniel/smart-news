@@ -42,7 +42,9 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          docker run --rm -d -p 8080:8080 -e GEMINI_API_KEY=$GEMINI_API_KEY --name test-container smart-news:ci
+          docker run --rm -d -p 8080:8080 \
+            -e GEMINI_API_KEY=$GEMINI_API_KEY \
+            --name test-container smart-news:ci
           MAX_WAIT_SECONDS=60
           SLEEP_SECONDS=2
           ELAPSED=0
@@ -112,4 +114,4 @@ jobs:
             --region europe-west2 \
             --platform managed \
             --no-allow-unauthenticated \
-            --set-env-vars "GEMINI_API_KEY=$GEMINI_API_KEY"
+            --set-env-vars "GEMINI_API_KEY=$GEMINI_API_KEY,SPRING_PROFILES_ACTIVE=gcp"
