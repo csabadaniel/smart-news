@@ -54,8 +54,8 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
   - `GCP_SERVICE_ACCOUNT`
 - GCP Secret Manager secrets:
   - `gemini-api-key`: the Gemini API key used by the service on Cloud Run
-  - `gmail-username`: the Gmail address used as SMTP username, sender, and recipient
-  - `gmail-app-password`: the Gmail app password used for SMTP authentication
+  - `gmail-username`: the Gmail address used as sender and recipient
+  - `sendgrid-api-key`: the SendGrid API key used for SMTP authentication
 - GCP Parameter Manager parameters (global):
   - `smart-news-model` (latest): the Gemini model name (e.g. `gemini-2.5-flash`)
   - `smart-news-prompt` (latest): the prompt sent to Gemini on each `/news` request
@@ -69,13 +69,13 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - `GEMINI_API_KEY` is mounted from GCP Secret Manager on Cloud Run; it is not set as a plain environment variable.
 - The `gcp` Spring profile is activated on Cloud Run; it enables GCP Parameter Manager to supply the model name and prompt at runtime.
 - Prompt and model can be updated without redeployment by creating a new parameter version and calling `POST /actuator/refresh`. The endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
+- Gmail SMTP (`smtp.gmail.com`) does not work from Cloud Run: Google blocks or rejects SMTP authentication from its own cloud IP ranges to prevent spam, returning `535 5.7.8 BadCredentials` even with valid app passwords. The same credentials work fine from a local machine. SendGrid is used instead.
 
 ## Running locally
 
 - Set the following environment variables in your shell:
   - `GEMINI_API_KEY`: a valid Gemini API key
-  - `GMAIL_USERNAME`: the Gmail address used as SMTP username, sender, and recipient
-  - `GMAIL_APP_PASSWORD`: a Gmail app password for SMTP authentication
+  - `SENDGRID_API_KEY`: a valid SendGrid API key
 - Run the application with `./mvnw spring-boot:run`.
 - Call `GET http://localhost:8080/news` to trigger a Gemini prompt and receive the generated response.
 - Call `POST http://localhost:8080/news/mail` to fetch news from Gemini and send it by email.

@@ -1,8 +1,8 @@
 news:
   prompt: "Give me today's top news summary."
   mail:
-    from: ${GMAIL_USERNAME}
-    to: ${GMAIL_USERNAME}
+    from: ${SENDGRID_FROM_EMAIL:csaba.daniel2@gmail.com}
+    to: ${SENDGRID_TO_EMAIL:csaba.daniel2@gmail.com}
     subject: "Smart News"
 
 spring:
@@ -25,10 +25,10 @@ spring:
             model: gemini-2.5-flash
             max-output-tokens: 2048
   mail:
-    host: smtp.gmail.com
+    host: smtp.sendgrid.net
     port: 587
-    username: ${GMAIL_USERNAME}
-    password: ${GMAIL_APP_PASSWORD}
+    username: apikey
+    password: ${SENDGRID_API_KEY}
     properties:
       mail:
         smtp:
@@ -69,8 +69,8 @@ spring:
             model: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-model/versions/latest}
             max-output-tokens: 2048
   mail:
-    username: ${sm://gmail-username}
-    password: ${sm://gmail-app-password}
+    username: apikey
+    password: ${sm://sendgrid-api-key}
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
   mail:
