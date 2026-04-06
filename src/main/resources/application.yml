@@ -1,5 +1,9 @@
 news:
   prompt: "Give me today's top news summary."
+  mail:
+    from: ${SENDGRID_FROM_EMAIL:no-reply@example.com}
+    to: ${SENDGRID_TO_EMAIL:recipient@example.com}
+    subject: "Smart News"
 
 spring:
   application:
@@ -7,6 +11,8 @@ spring:
   cloud:
     gcp:
       parametermanager:
+        enabled: false
+      secretmanager:
         enabled: false
   ai:
     retry:
@@ -18,6 +24,17 @@ spring:
           options:
             model: gemini-2.5-flash
             max-output-tokens: 2048
+  mail:
+    host: smtp.sendgrid.net
+    port: 587
+    username: apikey
+    password: ${SENDGRID_API_KEY:dummy-key}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 management:
   endpoints:
@@ -28,26 +45,39 @@ management:
     health:
       probes:
         enabled: true
+  health:
+    mail:
+      enabled: false
 
 ---
 spring:
   config:
     activate:
       on-profile: gcp
-    import: "pm@"
+    import: "pm@,sm://"
   cloud:
     gcp:
       parametermanager:
         enabled: true
+      secretmanager:
+        enabled: true
   ai:
     google:
       genai:
+        api-key: ${sm://projects/smart-news-20260321/secrets/gemini-api-key}
         chat:
           options:
             model: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-model/versions/latest}
             max-output-tokens: 2048
+  mail:
+    username: apikey
+    password: ${sm://projects/smart-news-20260321/secrets/sendgrid-api-key}
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
+  mail:
+    from: ${sm://projects/smart-news-20260321/secrets/sender-email}
+    to: ${sm://projects/smart-news-20260321/secrets/recipient-email}
+    subject: "Smart News"
 management:
   endpoints:
     web:

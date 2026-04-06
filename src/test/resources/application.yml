@@ -1,5 +1,9 @@
 news:
   prompt: "Give me today's top news summary."
+  mail:
+    from: "smart-news@example.com"
+    to: "reader@example.com"
+    subject: "Smart News"
 
 spring:
   application:
@@ -7,6 +11,8 @@ spring:
   cloud:
     gcp:
       parametermanager:
+        enabled: false
+      secretmanager:
         enabled: false
   ai:
     retry:
@@ -17,6 +23,8 @@ spring:
         chat:
           options:
             model: gemini-2.5-flash
+  mail:
+    host: localhost
 
 management:
   endpoints:
@@ -27,3 +35,6 @@ management:
     health:
       probes:
         enabled: true
+  health:
+    mail:
+      enabled: false
