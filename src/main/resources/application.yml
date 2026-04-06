@@ -28,7 +28,7 @@ spring:
     host: smtp.sendgrid.net
     port: 587
     username: apikey
-    password: ${SENDGRID_API_KEY}
+    password: ${SENDGRID_API_KEY:dummy-key}
     properties:
       mail:
         smtp:
