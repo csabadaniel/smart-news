@@ -12,6 +12,8 @@ spring:
     gcp:
       parametermanager:
         enabled: false
+      secretmanager:
+        enabled: false
   ai:
     retry:
       max-attempts: 1
