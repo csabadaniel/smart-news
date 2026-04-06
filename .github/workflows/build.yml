@@ -34,9 +34,11 @@ jobs:
         run: ./mvnw -B verify
 
       - name: Build Docker image
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: docker build -t smart-news:ci .
 
       - name: Test Docker image
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
           docker run --rm -d -p 8080:8080 \
             --name test-container smart-news:ci
