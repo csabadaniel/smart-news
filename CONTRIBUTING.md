@@ -63,6 +63,7 @@ This project uses **London School Test-Driven Development (TDD)** for implementa
 ## Deployment Policy
 
 - Current setup deploys a single production service.
-- CI build and Docker verification run on every push and pull request.
-- Deployments run only when triggered manually via `workflow_dispatch` or automatically from pushes to `main`.
+- On feature branch pushes and pull requests, only the Maven build and tests run; the Docker build and smoke test are skipped to keep CI fast.
+- On pushes to `main` and manual `workflow_dispatch` runs, the build job also builds, smoke-tests, and uploads the Docker image as a workflow artifact.
+- Deployments run only when triggered manually via `workflow_dispatch` or automatically from pushes to `main`. The deploy job loads the image artifact produced by the build job rather than rebuilding it.
 - Deployments do not require a separate approval step.
