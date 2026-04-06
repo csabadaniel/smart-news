@@ -77,6 +77,7 @@ news:
   mail:
     from: ${sm://projects/smart-news-20260321/secrets/sender-email}
     to: ${sm://projects/smart-news-20260321/secrets/recipient-email}
+    subject: "Smart News"
 management:
   endpoints:
     web:
