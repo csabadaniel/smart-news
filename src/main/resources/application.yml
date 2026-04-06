@@ -1,8 +1,8 @@
 news:
   prompt: "Give me today's top news summary."
   mail:
-    from: ${SENDGRID_FROM_EMAIL:csaba.daniel2@gmail.com}
-    to: ${SENDGRID_TO_EMAIL:csaba.daniel2@gmail.com}
+    from: ${SENDGRID_FROM_EMAIL:no-reply@example.com}
+    to: ${SENDGRID_TO_EMAIL:recipient@example.com}
     subject: "Smart News"
 
 spring:
