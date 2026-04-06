@@ -54,9 +54,11 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
   - `GCP_SERVICE_ACCOUNT`
 - GCP Secret Manager secrets:
   - `gemini-api-key`: the Gemini API key used by the service on Cloud Run
-- GCP Parameter Manager parameters (global, latest version):
-  - `smart-news-model`: the Gemini model name (e.g. `gemini-2.5-flash`)
-  - `smart-news-prompt`: the prompt sent to Gemini on each `/news` request
+- GCP Parameter Manager parameters (global):
+  - `smart-news-model` (latest): the Gemini model name (e.g. `gemini-2.5-flash`)
+  - `smart-news-prompt` (latest): the prompt sent to Gemini on each `/news` request
+  - `gmail-username` (v1): the Gmail address used as SMTP username, sender, and recipient
+  - `gmail-app-password` (v1): the Gmail app password used for SMTP authentication
 
 ### Non-obvious behavior
 
@@ -70,7 +72,11 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 ## Running locally
 
-- Set `GEMINI_API_KEY` to a valid Gemini API key in your shell environment.
+- Set the following environment variables in your shell:
+  - `GEMINI_API_KEY`: a valid Gemini API key
+  - `GMAIL_USERNAME`: the Gmail address used as SMTP username, sender, and recipient
+  - `GMAIL_APP_PASSWORD`: a Gmail app password for SMTP authentication
 - Run the application with `./mvnw spring-boot:run`.
 - Call `GET http://localhost:8080/news` to trigger a Gemini prompt and receive the generated response.
-- Without `GEMINI_API_KEY`, the application starts with a placeholder key; calls to `/news` will fail with an authentication error from the Gemini API.
+- Call `POST http://localhost:8080/news/mail` to fetch news from Gemini and send it by email.
+- Without `GEMINI_API_KEY`, the application starts with a placeholder key; calls to `/news` or `/news/mail` will fail with an authentication error from the Gemini API.
