@@ -107,6 +107,6 @@ jobs:
             --region europe-west2 \
             --platform managed \
             --no-allow-unauthenticated \
-            --remove-env-vars "GEMINI_API_KEY,SENDGRID_API_KEY,RECIPIENT_EMAIL" \
-            --update-secrets "GEMINI_API_KEY=gemini-api-key:latest,SENDGRID_API_KEY=sendgrid-api-key:latest,RECIPIENT_EMAIL=gmail-username:latest" \
+            --remove-env-vars "GEMINI_API_KEY,SENDGRID_API_KEY,SENDGRID_FROM_EMAIL,SENDGRID_TO_EMAIL" \
+            --update-secrets "GEMINI_API_KEY=gemini-api-key:latest,SENDGRID_API_KEY=sendgrid-api-key:latest,SENDGRID_FROM_EMAIL=sender-email:latest,SENDGRID_TO_EMAIL=recipient-email:latest" \
             --update-env-vars "SPRING_PROFILES_ACTIVE=gcp"

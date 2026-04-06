@@ -74,8 +74,8 @@ spring:
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
   mail:
-    from: ${RECIPIENT_EMAIL}
-    to: ${RECIPIENT_EMAIL}
+    from: ${SENDGRID_FROM_EMAIL}
+    to: ${SENDGRID_TO_EMAIL}
 management:
   endpoints:
     web:
