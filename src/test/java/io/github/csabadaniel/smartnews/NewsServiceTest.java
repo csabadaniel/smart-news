@@ -57,7 +57,7 @@ class NewsServiceTest {
     }
 
     @Test
-    void shouldSendEmailWithActualNewsFromGemini() {
+    void shouldSendEmailWithNewsFromChatClient() {
         stubChatClientToReturn(EXPECTED_NEWS_RESPONSE);
 
         newsService.sendMail();
