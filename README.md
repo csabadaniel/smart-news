@@ -54,8 +54,9 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
   - `GCP_SERVICE_ACCOUNT`
 - GCP Secret Manager secrets:
   - `gemini-api-key`: the Gemini API key used by the service on Cloud Run
-  - `gmail-username`: the Gmail address used as sender and recipient (mounted as `RECIPIENT_EMAIL`)
-  - `sendgrid-api-key`: the SendGrid API key used for SMTP authentication (mounted as `SENDGRID_API_KEY`)
+  - `sendgrid-api-key`: the SendGrid API key used for SMTP authentication
+  - `sender-email`: the email address used as the mail sender
+  - `recipient-email`: the email address the news digest is delivered to
 - GCP Parameter Manager parameters (global):
   - `smart-news-model` (latest): the Gemini model name (e.g. `gemini-2.5-flash`)
   - `smart-news-prompt` (latest): the prompt sent to Gemini on each `/news` request
@@ -66,11 +67,11 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - Deployment runs only on manual `workflow_dispatch` requests and pushes to `main`.
 - Deployment does not require a separate approval step.
 - Docker image is pushed to Artifact Registry as part of the deploy job.
-- `GEMINI_API_KEY` is mounted from GCP Secret Manager on Cloud Run; it is not set as a plain environment variable.
 - The `gcp` Spring profile is activated on Cloud Run; it enables GCP Parameter Manager to supply the model name and prompt at runtime.
-- Prompt and model can be updated without redeployment by creating a new parameter version and calling `POST /actuator/refresh`. The endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
+- Secrets are resolved at startup via `sm://` property placeholders using fully-qualified resource names (e.g. `sm://projects/smart-news-20260321/secrets/gemini-api-key`). Fully-qualified names are used to avoid a known Spring Cloud GCP bootstrap-phase bug where short secret names can silently fail to resolve if the project ID provider is not yet initialised.
+- Prompt, model, sender address, and recipient address can be updated without redeployment by creating a new parameter or secret version and calling `POST /actuator/refresh`. `NewsService` is annotated with `@RefreshScope`, so it picks up the new values on the next request. The refresh endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
+- **Known limitation:** `SENDGRID_API_KEY` (`spring.mail.password`) and `GEMINI_API_KEY` (`spring.ai.*.api-key`) are not refreshable at runtime. Spring Boot auto-configures `JavaMailSender` and the Spring AI `ChatClient` as plain singletons outside `@RefreshScope`, so they do not pick up a rotated secret without a redeployment. Making them refreshable would require defining custom `@RefreshScope` beans for both, which is achievable but adds complexity that is not warranted at the current scale.
 - Gmail SMTP (`smtp.gmail.com`) does not work from Cloud Run: Google blocks or rejects SMTP authentication from its own cloud IP ranges to prevent spam, returning `535 5.7.8 BadCredentials` even with valid app passwords. The same credentials work fine from a local machine. SendGrid is used instead.
-- Spring Cloud GCP `sm://` property placeholders do not reliably resolve for properties bound early in the Spring Boot lifecycle (e.g. `spring.mail.password`, `news.mail.from`). The `sm:` prefix is stripped but the value is not resolved, resulting in literals like `//sendgrid-api-key`. Secrets needed at startup are instead mounted as Cloud Run env vars via `--update-secrets`, which makes them available before Spring initialises.
 
 ## Running locally
 
