@@ -54,7 +54,7 @@ spring:
   config:
     activate:
       on-profile: gcp
-    import: "pm@"
+    import: "pm@,sm://"
   cloud:
     gcp:
       parametermanager:
@@ -64,18 +64,19 @@ spring:
   ai:
     google:
       genai:
+        api-key: ${sm://projects/smart-news-20260321/secrets/gemini-api-key}
         chat:
           options:
             model: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-model/versions/latest}
             max-output-tokens: 2048
   mail:
     username: apikey
-    password: ${SENDGRID_API_KEY}
+    password: ${sm://projects/smart-news-20260321/secrets/sendgrid-api-key}
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
   mail:
-    from: ${SENDGRID_FROM_EMAIL}
-    to: ${SENDGRID_TO_EMAIL}
+    from: ${sm://projects/smart-news-20260321/secrets/sender-email}
+    to: ${sm://projects/smart-news-20260321/secrets/recipient-email}
 management:
   endpoints:
     web:
