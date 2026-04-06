@@ -4,7 +4,6 @@ news:
     from: ${GMAIL_USERNAME}
     to: ${GMAIL_USERNAME}
     subject: "Smart News"
-    text: "Here is your news!"
 
 spring:
   application:

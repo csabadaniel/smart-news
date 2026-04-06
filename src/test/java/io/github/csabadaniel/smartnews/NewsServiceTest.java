@@ -19,7 +19,7 @@ class NewsServiceTest {
     private static final String EXPECTED_NEWS_RESPONSE = "Top story: London school TDD keeps this clean.";
     private static final NewsProperties NEWS_PROPERTIES = new NewsProperties(
             "Give me today's top news summary.",
-            new NewsProperties.Mail("smart-news@example.com", "reader@example.com", "Smart News", "Here is your news!")
+            new NewsProperties.Mail("smart-news@example.com", "reader@example.com", "Smart News")
     );
 
     @Mock
@@ -41,11 +41,15 @@ class NewsServiceTest {
         newsService = new NewsService(chatClient, NEWS_PROPERTIES, mailSender);
     }
 
-    @Test
-    void shouldGetNewsFromChatClient() {
+    private void stubChatClientToReturn(String content) {
         when(chatClient.prompt(NEWS_PROPERTIES.prompt())).thenReturn(chatClientRequestSpec);
         when(chatClientRequestSpec.call()).thenReturn(callResponseSpec);
-        when(callResponseSpec.content()).thenReturn(EXPECTED_NEWS_RESPONSE);
+        when(callResponseSpec.content()).thenReturn(content);
+    }
+
+    @Test
+    void shouldGetNewsFromChatClient() {
+        stubChatClientToReturn(EXPECTED_NEWS_RESPONSE);
 
         String news = newsService.getNews();
 
@@ -53,15 +57,16 @@ class NewsServiceTest {
     }
 
     @Test
-    void shouldSendEmailWithConfiguredParameters() {
+    void shouldSendEmailWithActualNewsFromGemini() {
+        stubChatClientToReturn(EXPECTED_NEWS_RESPONSE);
+
+        newsService.sendMail();
+
         SimpleMailMessage expectedMessage = new SimpleMailMessage();
         expectedMessage.setFrom(NEWS_PROPERTIES.mail().from());
         expectedMessage.setTo(NEWS_PROPERTIES.mail().to());
         expectedMessage.setSubject(NEWS_PROPERTIES.mail().subject());
-        expectedMessage.setText(NEWS_PROPERTIES.mail().text());
-
-        newsService.sendMail();
-
+        expectedMessage.setText(EXPECTED_NEWS_RESPONSE);
         verify(mailSender).send(expectedMessage);
     }
 

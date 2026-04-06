@@ -29,7 +29,7 @@ public class NewsService {
         message.setFrom(newsProperties.mail().from());
         message.setTo(newsProperties.mail().to());
         message.setSubject(newsProperties.mail().subject());
-        message.setText(newsProperties.mail().text());
+        message.setText(getNews());
         mailSender.send(message);
     }
 

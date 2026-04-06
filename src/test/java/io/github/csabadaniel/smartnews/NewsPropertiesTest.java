@@ -30,7 +30,7 @@ class NewsPropertiesTest {
     @Test
     void shouldLoadMailProperties() {
         assertThat(newsProperties.mail()).isEqualTo(
-                new NewsProperties.Mail("smart-news@example.com", "reader@example.com", "Smart News", "Here is your news!"));
+                new NewsProperties.Mail("smart-news@example.com", "reader@example.com", "Smart News"));
     }
 
 }

@@ -4,7 +4,6 @@ news:
     from: "smart-news@example.com"
     to: "reader@example.com"
     subject: "Smart News"
-    text: "Here is your news!"
 
 spring:
   application:
