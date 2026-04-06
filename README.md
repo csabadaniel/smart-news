@@ -70,6 +70,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - The `gcp` Spring profile is activated on Cloud Run; it enables GCP Parameter Manager to supply the model name and prompt at runtime.
 - Prompt and model can be updated without redeployment by creating a new parameter version and calling `POST /actuator/refresh`. The endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
 - Gmail SMTP (`smtp.gmail.com`) does not work from Cloud Run: Google blocks or rejects SMTP authentication from its own cloud IP ranges to prevent spam, returning `535 5.7.8 BadCredentials` even with valid app passwords. The same credentials work fine from a local machine. SendGrid is used instead.
+- Spring Cloud GCP `sm://` property placeholders do not reliably resolve for properties bound early in the Spring Boot lifecycle (e.g. `spring.mail.password`, `news.mail.from`). The `sm:` prefix is stripped but the value is not resolved, resulting in literals like `//sendgrid-api-key`. Secrets needed at startup are instead mounted as Cloud Run env vars via `--update-secrets`, which makes them available before Spring initialises.
 
 ## Running locally
 
