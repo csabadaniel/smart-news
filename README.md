@@ -54,8 +54,8 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
   - `GCP_SERVICE_ACCOUNT`
 - GCP Secret Manager secrets:
   - `gemini-api-key`: the Gemini API key used by the service on Cloud Run
-  - `gmail-username`: the Gmail address used as sender and recipient
-  - `sendgrid-api-key`: the SendGrid API key used for SMTP authentication
+  - `gmail-username`: the Gmail address used as sender and recipient (mounted as `RECIPIENT_EMAIL`)
+  - `sendgrid-api-key`: the SendGrid API key used for SMTP authentication (mounted as `SENDGRID_API_KEY`)
 - GCP Parameter Manager parameters (global):
   - `smart-news-model` (latest): the Gemini model name (e.g. `gemini-2.5-flash`)
   - `smart-news-prompt` (latest): the prompt sent to Gemini on each `/news` request

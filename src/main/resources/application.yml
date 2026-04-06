@@ -70,12 +70,12 @@ spring:
             max-output-tokens: 2048
   mail:
     username: apikey
-    password: ${sm://sendgrid-api-key}
+    password: ${SENDGRID_API_KEY}
 news:
   prompt: ${pm@projects/smart-news-20260321/locations/global/parameters/smart-news-prompt/versions/latest}
   mail:
-    from: ${sm://gmail-username}
-    to: ${sm://gmail-username}
+    from: ${RECIPIENT_EMAIL}
+    to: ${RECIPIENT_EMAIL}
 management:
   endpoints:
     web:
