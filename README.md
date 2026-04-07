@@ -43,7 +43,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Completed   |
 | 04  | Integrate with Gemini API for content generation          | iteration/04-gemini-integration        | Completed   |
 | 05  | Integrate email sending                                   | iteration/05-email-integration         | Completed   |
-| 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow      | In Progress |
+| 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow      | Completed   |
 
 ## Deploy to GCP Cloud Run
 
