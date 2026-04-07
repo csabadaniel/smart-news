@@ -75,6 +75,7 @@ jobs:
           name: docker-image
           path: smart-news-ci.tar.gz
           retention-days: 1
+          compression-level: 0
 
   deploy:
     needs: build
