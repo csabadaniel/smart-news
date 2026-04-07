@@ -3,7 +3,6 @@ name: Build
 on:
   workflow_dispatch:
   push:
-  pull_request:
 
 permissions:
   contents: read
@@ -34,9 +33,11 @@ jobs:
         run: ./mvnw -B verify
 
       - name: Build Docker image
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: docker build -t smart-news:ci .
 
       - name: Test Docker image
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
           docker run --rm -d -p 8080:8080 \
             --name test-container smart-news:ci
@@ -61,6 +62,18 @@ jobs:
           docker logs test-container || true
           docker stop test-container || true
           exit 1
+
+      - name: Save Docker image
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        run: docker save smart-news:ci | gzip > smart-news-ci.tar.gz
+
+      - name: Upload Docker image artifact
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: smart-news-ci.tar.gz
+          compression-level: 0
 
   deploy:
     needs: build
@@ -88,8 +101,13 @@ jobs:
       - name: Configure Docker to use gcloud credentials
         run: gcloud auth configure-docker europe-west2-docker.pkg.dev
 
-      - name: Build Docker image
-        run: docker build -t smart-news:ci .
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker image
+        run: docker load < smart-news-ci.tar.gz
 
       - name: Push Docker image to Artifact Registry
         run: |
