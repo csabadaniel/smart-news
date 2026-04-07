@@ -76,6 +76,12 @@ resource "google_project_iam_member" "runner_secret_accessor" {
   member  = "serviceAccount:${google_service_account.cloud_run.email}"
 }
 
+resource "google_project_iam_member" "runner_parameter_accessor" {
+  project = var.project_id
+  role    = "roles/parametermanager.parameterAccessor"
+  member  = "serviceAccount:${google_service_account.cloud_run.email}"
+}
+
 # ── Workload Identity Federation — deployer ───────────────────────────────────
 
 resource "google_iam_workload_identity_pool" "github" {
@@ -221,6 +227,7 @@ resource "google_cloud_run_v2_service" "smart_news" {
   depends_on = [
     google_project_service.apis,
     google_project_iam_member.runner_secret_accessor,
+    google_project_iam_member.runner_parameter_accessor,
   ]
 
   lifecycle {
