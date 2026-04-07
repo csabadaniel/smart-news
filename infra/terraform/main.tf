@@ -76,10 +76,22 @@ resource "google_project_iam_member" "runner_secret_accessor" {
   member  = "serviceAccount:${google_service_account.cloud_run.email}"
 }
 
-resource "google_project_iam_member" "runner_parameter_accessor" {
+# Authoritative: only smart-news-runner may access Parameter Manager.
+# This prevents any other SA (e.g. the default Compute SA) from holding this role.
+resource "google_project_iam_binding" "runner_parameter_accessor" {
   project = var.project_id
   role    = "roles/parametermanager.parameterAccessor"
-  member  = "serviceAccount:${google_service_account.cloud_run.email}"
+  members = ["serviceAccount:${google_service_account.cloud_run.email}"]
+}
+
+# ── Guard against roles/editor re-grant ──────────────────────────────────────
+# GCP auto-grants roles/editor to the default Compute SA on project creation.
+# This authoritative binding locks the role to zero members so any out-of-band
+# grant causes `terraform plan` to flag drift.
+resource "google_project_iam_binding" "no_editor" {
+  project = var.project_id
+  role    = "roles/editor"
+  members = []
 }
 
 # ── Workload Identity Federation — deployer ───────────────────────────────────
@@ -227,7 +239,7 @@ resource "google_cloud_run_v2_service" "smart_news" {
   depends_on = [
     google_project_service.apis,
     google_project_iam_member.runner_secret_accessor,
-    google_project_iam_member.runner_parameter_accessor,
+    google_project_iam_binding.runner_parameter_accessor,
   ]
 
   lifecycle {
