@@ -64,7 +64,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 ### Non-obvious behavior
 
-- Build runs on every workflow run (`push`, `pull_request`, and manual `workflow_dispatch`). On feature branches, only the Maven build and tests run; the Docker build and smoke test are skipped to keep feedback fast.
+- Build runs on every `push` and manual `workflow_dispatch`. On feature branches, only the Maven build and tests run; the Docker build and smoke test are skipped to keep feedback fast.
 - On pushes to `main` and manual `workflow_dispatch` runs, the build job also builds and smoke-tests the Docker image, then saves it as a workflow artifact.
 - Deployment runs only on manual `workflow_dispatch` requests and pushes to `main`.
 - Deployment does not require a separate approval step.
