@@ -99,7 +99,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Configure Docker to use gcloud credentials
-        run: gcloud auth configure-docker europe-west2-docker.pkg.dev
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: Download Docker image artifact
         uses: actions/download-artifact@v4
@@ -111,18 +111,18 @@ jobs:
 
       - name: Push Docker image to Artifact Registry
         run: |
-          IMAGE_TAG="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
+          IMAGE_TAG="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
           docker tag smart-news:ci "$IMAGE_TAG"
           docker push "$IMAGE_TAG"
-          docker tag smart-news:ci "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
-          docker push "europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+          docker tag smart-news:ci "us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
+          docker push "us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:latest"
 
       - name: Deploy to Cloud Run
         run: |
-          IMAGE_URL="europe-west2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
+          IMAGE_URL="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/smart-news/smart-news:${{ github.sha }}"
           gcloud run deploy smart-news \
             --image "$IMAGE_URL" \
-            --region europe-west2 \
+            --region us-central1 \
             --platform managed \
             --no-allow-unauthenticated \
             --remove-secrets "GEMINI_API_KEY,SENDGRID_API_KEY,SENDGRID_FROM_EMAIL,SENDGRID_TO_EMAIL" \
