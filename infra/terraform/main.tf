@@ -121,11 +121,6 @@ resource "google_secret_manager_secret" "gemini_api_key" {
   depends_on = [google_project_service.apis]
 }
 
-resource "google_secret_manager_secret_version" "gemini_api_key" {
-  secret      = google_secret_manager_secret.gemini_api_key.id
-  secret_data = var.gemini_api_key
-}
-
 resource "google_secret_manager_secret" "sendgrid_api_key" {
   project   = var.project_id
   secret_id = "sendgrid-api-key"
@@ -133,11 +128,6 @@ resource "google_secret_manager_secret" "sendgrid_api_key" {
     auto {}
   }
   depends_on = [google_project_service.apis]
-}
-
-resource "google_secret_manager_secret_version" "sendgrid_api_key" {
-  secret      = google_secret_manager_secret.sendgrid_api_key.id
-  secret_data = var.sendgrid_api_key
 }
 
 resource "google_secret_manager_secret" "sender_email" {
@@ -149,11 +139,6 @@ resource "google_secret_manager_secret" "sender_email" {
   depends_on = [google_project_service.apis]
 }
 
-resource "google_secret_manager_secret_version" "sender_email" {
-  secret      = google_secret_manager_secret.sender_email.id
-  secret_data = var.sender_email
-}
-
 resource "google_secret_manager_secret" "recipient_email" {
   project   = var.project_id
   secret_id = "recipient-email"
@@ -161,11 +146,6 @@ resource "google_secret_manager_secret" "recipient_email" {
     auto {}
   }
   depends_on = [google_project_service.apis]
-}
-
-resource "google_secret_manager_secret_version" "recipient_email" {
-  secret      = google_secret_manager_secret.recipient_email.id
-  secret_data = var.recipient_email
 }
 
 # ── Cloud Run ─────────────────────────────────────────────────────────────────

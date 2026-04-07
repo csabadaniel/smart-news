@@ -22,24 +22,4 @@ variable "github_repo" {
   default     = "csabadaniel/smart-news"
 }
 
-variable "gemini_api_key" {
-  type        = string
-  description = "Gemini API key"
-  sensitive   = true
-}
 
-variable "sendgrid_api_key" {
-  type        = string
-  description = "SendGrid API key"
-  sensitive   = true
-}
-
-variable "sender_email" {
-  type        = string
-  description = "Email address used as the mail sender"
-}
-
-variable "recipient_email" {
-  type        = string
-  description = "Email address the news digest is delivered to"
-}
