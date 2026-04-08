@@ -16,7 +16,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 - Docker
 - GitHub Actions
 - Terraform
-- Google Cloud: Cloud Run (container runtime), Artifact Registry, Secret Manager, Parameter Manager
+- Google Cloud: Cloud Run (container runtime), Artifact Registry, Secret Manager, Parameter Manager, Cloud Scheduler
 
 ## Constraints
 
@@ -48,7 +48,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                            | Completed   |
 | 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader        | Completed   |
 | 09  | Fix Terraform Cloud Run drift from gcloud metadata        | iteration/09-fix-terraform-cloud-run-drift  | Completed   |
-| 10  | Schedule email delivery                                   | iteration/10-schedule-emails                | In Progress |
+| 10  | Schedule email delivery                                   | iteration/10-schedule-emails                | Completed   |
 
 ## Deploy to GCP Cloud Run
 
@@ -69,8 +69,8 @@ All of the following are created and managed by `terraform apply`:
 
 - GCP APIs
 - Artifact Registry repository (`us-central1`)
-- Service accounts: `github-actions-deployer`, `smart-news-runner`
-- IAM bindings for both service accounts
+- Service accounts: `github-actions-deployer`, `smart-news-runner`, `smart-news-scheduler`
+- IAM bindings for all service accounts
 - Workload Identity Federation pool/provider for `github-actions-deployer`
 - Secret Manager secrets (values must be set manually after `terraform apply`):
   - `gemini-api-key`
@@ -78,6 +78,7 @@ All of the following are created and managed by `terraform apply`:
   - `sender-email`
   - `recipient-email`
 - Cloud Run service (`us-central1`)
+- Cloud Scheduler job (`smart-news-mail`) — triggers `POST /news/mail` on a cron schedule
 
 ### GitHub Actions secrets (managed separately)
 
@@ -104,6 +105,7 @@ All of the following are created and managed by `terraform apply`:
 - Prompt, model, sender address, and recipient address can be updated without redeployment by creating a new parameter or secret version and calling `POST /actuator/refresh`. `NewsService` is annotated with `@RefreshScope`, so it picks up the new values on the next request. The refresh endpoint is only exposed under the `gcp` profile and is protected by Cloud Run's `--no-allow-unauthenticated` setting, which requires a valid Google identity token on every request.
 - **Known limitation:** `SENDGRID_API_KEY` (`spring.mail.password`) and `GEMINI_API_KEY` (`spring.ai.*.api-key`) are not refreshable at runtime. Spring Boot auto-configures `JavaMailSender` and the Spring AI `ChatClient` as plain singletons outside `@RefreshScope`, so they do not pick up a rotated secret without a redeployment. Making them refreshable would require defining custom `@RefreshScope` beans for both, which is achievable but adds complexity that is not warranted at the current scale.
 - Gmail SMTP (`smtp.gmail.com`) does not work from Cloud Run: Google blocks or rejects SMTP authentication from its own cloud IP ranges to prevent spam, returning `535 5.7.8 BadCredentials` even with valid app passwords. The same credentials work fine from a local machine. SendGrid is used instead.
+- The Cloud Scheduler job is created by Terraform with a default schedule (`0 7 * * 1` — Mondays 7 AM UTC) but `schedule` is in `ignore_changes`. Adjust the schedule in Cloud Console → Cloud Scheduler → `smart-news-mail` → Edit; Terraform will not revert it on subsequent applies.
 
 ## Running locally
 
