@@ -17,7 +17,9 @@ PERMISSIONS=(
   artifactregistry.repositories.create
   artifactregistry.repositories.delete
   artifactregistry.repositories.get
+  artifactregistry.repositories.getIamPolicy
   artifactregistry.repositories.list
+  artifactregistry.repositories.setIamPolicy
   artifactregistry.repositories.update
 
   # Cloud Run

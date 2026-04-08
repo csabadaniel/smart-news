@@ -100,6 +100,15 @@ resource "google_secret_manager_secret_iam_member" "runner_recipient_email" {
   member    = "serviceAccount:${google_service_account.cloud_run.email}"
 }
 
+# Allow Cloud Run to pull images from the Artifact Registry repository.
+resource "google_artifact_registry_repository_iam_member" "runner_ar_reader" {
+  project    = var.project_id
+  location   = var.region
+  repository = google_artifact_registry_repository.smart_news.repository_id
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${google_service_account.cloud_run.email}"
+}
+
 # Authoritative: only smart-news-runner may access Parameter Manager.
 # This prevents any other SA (e.g. the default Compute SA) from holding this role.
 resource "google_project_iam_binding" "runner_parameter_accessor" {
@@ -132,7 +141,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   workload_identity_pool_provider_id = "github-provider"
   display_name                       = "GitHub Provider"
 
-  attribute_condition = "assertion.repository=='${var.github_repo}' && assertion.ref=='refs/heads/main'"
+  attribute_condition = "assertion.repository=='${var.github_repo}'"
 
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
@@ -229,6 +238,7 @@ resource "google_cloud_run_v2_service" "smart_news" {
   # profile; no secret env vars needed here.
   depends_on = [
     google_project_service.apis,
+    google_artifact_registry_repository_iam_member.runner_ar_reader,
     google_secret_manager_secret_iam_member.runner_gemini_api_key,
     google_secret_manager_secret_iam_member.runner_sendgrid_api_key,
     google_secret_manager_secret_iam_member.runner_sender_email,
