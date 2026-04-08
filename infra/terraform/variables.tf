@@ -3,12 +3,6 @@ variable "project_id" {
   description = "GCP project ID; must be provided explicitly for the target environment"
 }
 
-variable "project_number" {
-  type        = string
-  description = "GCP project number"
-  default     = "425089232711"
-}
-
 variable "region" {
   type        = string
   description = "GCP region for all regional resources"
