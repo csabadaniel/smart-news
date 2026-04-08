@@ -69,11 +69,35 @@ resource "google_service_account_iam_member" "deployer_act_as_runner" {
 }
 
 # ── IAM — Cloud Run SA secret access ─────────────────────────────────────────
+# Per-secret bindings keep least-privilege: the runner SA can only access the
+# 4 secrets it actually needs, not all secrets in the project.
 
-resource "google_project_iam_member" "runner_secret_accessor" {
-  project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${google_service_account.cloud_run.email}"
+resource "google_secret_manager_secret_iam_member" "runner_gemini_api_key" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.gemini_api_key.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.cloud_run.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "runner_sendgrid_api_key" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.sendgrid_api_key.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.cloud_run.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "runner_sender_email" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.sender_email.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.cloud_run.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "runner_recipient_email" {
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.recipient_email.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.cloud_run.email}"
 }
 
 # Authoritative: only smart-news-runner may access Parameter Manager.
