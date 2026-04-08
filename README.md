@@ -7,15 +7,16 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 ## Tech Stack
 
 - Java 21 LTS (initial baseline), with planned upgrade validation for Java 25 LTS
-- Spring Boot (version TBD; must support Java 21 baseline and planned validation on Java 25 LTS)
+- Spring Boot 4.0.3 (must support Java 21 baseline and planned validation on Java 25 LTS)
 - Spring AI
 - Maven
 - Lombok
 - Gemini API (Google AI)
-- Email delivery via SMTP or email API provider
+- SendGrid (email delivery)
 - Docker
 - GitHub Actions
-- Google Cloud: Cloud Run (container runtime), Cloud Scheduler, Artifact Registry, Secret Manager, Parameter Manager
+- Terraform
+- Google Cloud: Cloud Run (container runtime), Artifact Registry, Secret Manager, Parameter Manager
 
 ## Constraints
 
@@ -45,7 +46,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 05  | Integrate email sending                                   | iteration/05-email-integration         | Completed   |
 | 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow      | Completed   |
 | 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                       | Completed   |
-| 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader   | In Progress |
+| 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader   | Completed   |
 
 ## Deploy to GCP Cloud Run
 
