@@ -123,13 +123,6 @@ gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
   --member="serviceAccount:${SA_EMAIL}" \
   --role="projects/${PROJECT_ID}/roles/${ROLE_ID}"
 
-# roles/serviceusage.serviceUsageAdmin is required in addition to the custom role
-# because the Terraform google provider uses the Service Usage API in a way that
-# individual serviceusage.* permissions in a custom role are insufficient.
-gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
-  --member="serviceAccount:${SA_EMAIL}" \
-  --role="roles/serviceusage.serviceUsageAdmin"
-
 echo ""
 echo "Done."
 echo "Service account: ${SA_EMAIL}"
