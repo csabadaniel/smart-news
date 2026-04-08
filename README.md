@@ -45,6 +45,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 05  | Integrate email sending                                   | iteration/05-email-integration         | Completed   |
 | 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow      | Completed   |
 | 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                       | Completed   |
+| 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader   | In Progress |
 
 ## Deploy to GCP Cloud Run
 
