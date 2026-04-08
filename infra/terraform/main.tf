@@ -250,6 +250,13 @@ resource "google_cloud_run_v2_service" "smart_news" {
     ignore_changes = [
       # CI/CD manages the image tag; prevent Terraform from reverting it.
       template[0].containers[0].image,
+      # gcloud run deploy stamps these metadata fields; ignore to avoid
+      # spurious updates that trigger GCP's image-pull IAM re-validation.
+      client,
+      client_version,
+      # GCP injects default scaling fields at the service level; ignore to
+      # avoid spurious updates.
+      scaling,
     ]
   }
 }
