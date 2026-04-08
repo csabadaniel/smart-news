@@ -14,3 +14,9 @@ variable "github_repo" {
   description = "GitHub repository in owner/repo format"
   default     = "csabadaniel/smart-news"
 }
+
+variable "schedule" {
+  type        = string
+  description = "Cron schedule for the news email job (UTC)"
+  default     = "0 7 * * 1"
+}

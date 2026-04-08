@@ -9,6 +9,7 @@ resource "google_project_service" "apis" {
   for_each = toset([
     "artifactregistry.googleapis.com",
     "cloudresourcemanager.googleapis.com",
+    "cloudscheduler.googleapis.com",
     "iam.googleapis.com",
     "iamcredentials.googleapis.com",
     "run.googleapis.com",
@@ -259,4 +260,40 @@ resource "google_cloud_run_v2_service" "smart_news" {
       scaling,
     ]
   }
+}
+
+# ── Cloud Scheduler ───────────────────────────────────────────────────────────
+
+resource "google_service_account" "scheduler" {
+  project      = var.project_id
+  account_id   = "smart-news-scheduler"
+  display_name = "Smart News Cloud Scheduler"
+}
+
+resource "google_cloud_run_v2_service_iam_member" "scheduler_invoker" {
+  project  = var.project_id
+  location = var.region
+  name     = google_cloud_run_v2_service.smart_news.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${google_service_account.scheduler.email}"
+}
+
+resource "google_cloud_scheduler_job" "news_mail" {
+  project   = var.project_id
+  region    = var.region
+  name      = "smart-news-mail"
+  schedule  = var.schedule
+  time_zone = "UTC"
+
+  http_target {
+    http_method = "POST"
+    uri         = "${google_cloud_run_v2_service.smart_news.uri}/news/mail"
+
+    oidc_token {
+      service_account_email = google_service_account.scheduler.email
+      audience              = google_cloud_run_v2_service.smart_news.uri
+    }
+  }
+
+  depends_on = [google_project_service.apis]
 }
