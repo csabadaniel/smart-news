@@ -178,6 +178,10 @@ resource "google_cloud_run_v2_service" "smart_news" {
   template {
     service_account = google_service_account.cloud_run.email
 
+    scaling {
+      max_instance_count = 20
+    }
+
     containers {
       # Placeholder image used only on initial creation.
       # CI/CD manages the deployed image; Terraform ignores subsequent image changes.
