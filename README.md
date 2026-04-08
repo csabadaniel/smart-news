@@ -37,16 +37,17 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 
 ## Iterations
 
-| #   | Goal                                                      | Branch                                 | Status      |
-| --- | --------------------------------------------------------- | -------------------------------------- | ----------- |
-| 01  | Document project intent and workflow                      | iteration/01-project-intent            | Completed   |
-| 02  | Build the base service responding to an external API call | iteration/02-base-service-external-api | Completed   |
-| 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp             | Completed   |
-| 04  | Integrate with Gemini API for content generation          | iteration/04-gemini-integration        | Completed   |
-| 05  | Integrate email sending                                   | iteration/05-email-integration         | Completed   |
-| 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow      | Completed   |
-| 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                       | Completed   |
-| 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader   | Completed   |
+| #   | Goal                                                      | Branch                                      | Status      |
+| --- | --------------------------------------------------------- | ------------------------------------------- | ----------- |
+| 01  | Document project intent and workflow                      | iteration/01-project-intent                 | Completed   |
+| 02  | Build the base service responding to an external API call | iteration/02-base-service-external-api      | Completed   |
+| 03  | Deploy the base service to GCP Cloud Run                  | iteration/03-deploy-to-gcp                  | Completed   |
+| 04  | Integrate with Gemini API for content generation          | iteration/04-gemini-integration             | Completed   |
+| 05  | Integrate email sending                                   | iteration/05-email-integration              | Completed   |
+| 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow           | Completed   |
+| 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                            | Completed   |
+| 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader        | Completed   |
+| 09  | Fix Terraform Cloud Run drift from gcloud metadata        | iteration/09-fix-terraform-cloud-run-drift  | Completed   |
 
 ## Deploy to GCP Cloud Run
 
