@@ -76,7 +76,7 @@ jobs:
           compression-level: 0
 
   deploy:
-    needs: build
+    needs: [build, terraform]
     # Deploy only on explicit manual request or after pushes to main.
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     permissions:
@@ -123,7 +123,10 @@ jobs:
           gcloud run deploy smart-news \
             --image "$IMAGE_URL" \
             --region us-central1 \
-            --platform managed
+            --platform managed \
+            --project "${{ secrets.GCP_PROJECT_ID }}" \
+            --no-allow-unauthenticated \
+            --quiet
 
   terraform:
     runs-on: ubuntu-latest
@@ -140,7 +143,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "~1"
+          terraform_version: "~1.9"
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v3
