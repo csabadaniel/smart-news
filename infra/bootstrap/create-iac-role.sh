@@ -101,6 +101,18 @@ PERMISSIONS=(
   serviceusage.services.enable
   serviceusage.services.get
   serviceusage.services.list
+
+  # Cloud Scheduler
+  cloudscheduler.jobs.create
+  cloudscheduler.jobs.delete
+  cloudscheduler.jobs.enable
+  cloudscheduler.jobs.get
+  cloudscheduler.jobs.list
+  cloudscheduler.jobs.pause
+  cloudscheduler.jobs.run
+  cloudscheduler.jobs.update
+  cloudscheduler.locations.get
+  cloudscheduler.locations.list
 )
 
 PERMISSIONS_CSV=$(IFS=,; echo "${PERMISSIONS[*]}")
