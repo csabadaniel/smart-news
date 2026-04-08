@@ -1,7 +1,6 @@
 variable "project_id" {
   type        = string
-  description = "GCP project ID"
-  default     = "smart-news-20260321"
+  description = "GCP project ID; must be provided explicitly for the target environment"
 }
 
 variable "project_number" {
@@ -21,5 +20,3 @@ variable "github_repo" {
   description = "GitHub repository in owner/repo format"
   default     = "csabadaniel/smart-news"
 }
-
-

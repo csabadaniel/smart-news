@@ -127,6 +127,8 @@ jobs:
 
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
     permissions:
       contents: read
       id-token: write
