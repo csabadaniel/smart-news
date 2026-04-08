@@ -105,8 +105,11 @@ PERMISSIONS=(
   # Cloud Scheduler
   cloudscheduler.jobs.create
   cloudscheduler.jobs.delete
+  cloudscheduler.jobs.enable
   cloudscheduler.jobs.get
   cloudscheduler.jobs.list
+  cloudscheduler.jobs.pause
+  cloudscheduler.jobs.run
   cloudscheduler.jobs.update
   cloudscheduler.locations.get
   cloudscheduler.locations.list
