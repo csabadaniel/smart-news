@@ -99,6 +99,7 @@ All of the following are created and managed by `terraform apply`:
 - On pushes to `main` and manual `workflow_dispatch` runs, the build job also builds and smoke-tests the Docker image, then saves it as a workflow artifact.
 - Deployment runs only on manual `workflow_dispatch` requests and pushes to `main`.
 - Deployment does not require a separate approval step.
+- `terraform apply` runs on both pushes to `main` and manual `workflow_dispatch`. On feature branch pushes, only `terraform plan` runs.
 - The Docker image built and tested in the build job is saved as a workflow artifact and loaded by the deploy job. It is never rebuilt during deploy.
 - The `gcp` Spring profile is activated on Cloud Run; it enables GCP Parameter Manager to supply the model name and prompt at runtime.
 - Secrets are resolved at startup via `sm://` property placeholders using fully-qualified resource names (e.g. `sm://projects/smart-news-20260321/secrets/gemini-api-key`). Fully-qualified names are used to avoid a known Spring Cloud GCP bootstrap-phase bug where short secret names can silently fail to resolve if the project ID provider is not yet initialised.
