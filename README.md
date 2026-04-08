@@ -44,23 +44,49 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 04  | Integrate with Gemini API for content generation          | iteration/04-gemini-integration        | Completed   |
 | 05  | Integrate email sending                                   | iteration/05-email-integration         | Completed   |
 | 06  | Optimize CI workflow to reduce redundancy                 | iteration/06-optimize-ci-workflow      | Completed   |
+| 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                       | Completed   |
 
 ## Deploy to GCP Cloud Run
 
-### Setup
+Infrastructure is managed with Terraform (`infra/terraform/`). Bootstrap scripts in `infra/bootstrap/` must be run once manually before the first `terraform apply`.
 
-- GitHub Actions secrets (Settings -> Secrets and variables -> Actions):
-  - `GCP_PROJECT_ID`
-  - `GCP_WORKLOAD_IDENTITY_PROVIDER`
-  - `GCP_SERVICE_ACCOUNT`
-- GCP Secret Manager secrets:
-  - `gemini-api-key`: the Gemini API key used by the service on Cloud Run
-  - `sendgrid-api-key`: the SendGrid API key used for SMTP authentication
-  - `sender-email`: the email address used as the mail sender
-  - `recipient-email`: the email address the news digest is delivered to
-- GCP Parameter Manager parameters (global):
-  - `smart-news-model` (latest): the Gemini model name (e.g. `gemini-2.5-flash`)
-  - `smart-news-prompt` (latest): the prompt sent to Gemini on each `/news` request
+### Bootstrap (one-time)
+
+1. Run `infra/bootstrap/create-iac-role.sh` — creates the `terraform-iac` service account and custom IAM role.
+2. Run `infra/bootstrap/create-state-bucket.sh` — creates the GCS remote state bucket in `us-central1`.
+3. Run `infra/bootstrap/create-wif-terraform.sh` — creates the Workload Identity Federation pool/provider for the Terraform SA.
+4. Add GitHub Actions secrets (Settings → Secrets and variables → Actions):
+   - `GCP_TERRAFORM_WIF_PROVIDER` — printed by `create-wif-terraform.sh`
+   - `GCP_TERRAFORM_SERVICE_ACCOUNT` — `terraform-iac@smart-news-20260321.iam.gserviceaccount.com`
+
+### Terraform-managed resources
+
+All of the following are created and managed by `terraform apply`:
+
+- GCP APIs
+- Artifact Registry repository (`us-central1`)
+- Service accounts: `github-actions-deployer`, `smart-news-runner`
+- IAM bindings for both service accounts
+- Workload Identity Federation pool/provider for `github-actions-deployer`
+- Secret Manager secrets (values must be set manually after `terraform apply`):
+  - `gemini-api-key`
+  - `sendgrid-api-key`
+  - `sender-email`
+  - `recipient-email`
+- Cloud Run service (`us-central1`)
+
+### GitHub Actions secrets (managed separately)
+
+- `GCP_PROJECT_ID`
+- `GCP_WORKLOAD_IDENTITY_PROVIDER` — output by Terraform (`wif_provider`)
+- `GCP_SERVICE_ACCOUNT` — output by Terraform (`deployer_service_account`)
+- `GCP_TERRAFORM_WIF_PROVIDER`
+- `GCP_TERRAFORM_SERVICE_ACCOUNT`
+
+### GCP Parameter Manager parameters (global, set manually)
+
+- `smart-news-model` (latest): the Gemini model name (e.g. `gemini-2.5-flash`)
+- `smart-news-prompt` (latest): the prompt sent to Gemini on each `/news` request
 
 ### Non-obvious behavior
 

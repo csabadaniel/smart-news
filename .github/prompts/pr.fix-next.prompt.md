@@ -18,7 +18,10 @@ Output requirements:
 - Thread URL and short summary
 - Files changed
 - Validation result
-- Suggested commit message
+- Suggested commit message following the Conventional Commits convention required by CONTRIBUTING.md:
+  - Format: `<type>: <subject>` (no scope)
+  - Allowed types: feat, fix, ci, docs, refactor, test, build, chore
+  - Lowercase type, imperative mood subject, no trailing period
 
 Constraints:
 - Do not commit.
