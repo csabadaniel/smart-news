@@ -295,5 +295,13 @@ resource "google_cloud_scheduler_job" "news_mail" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      # Schedule can be adjusted in the Cloud Console without triggering a
+      # Terraform revert on the next apply.
+      schedule,
+    ]
+  }
+
   depends_on = [google_project_service.apis]
 }

@@ -17,6 +17,6 @@ variable "github_repo" {
 
 variable "schedule" {
   type        = string
-  description = "Cron schedule for the news email job (UTC)"
+  description = "Initial cron schedule (UTC) for the news email job. After first apply, change this via Cloud Console — Terraform will not override it."
   default     = "0 7 * * 1"
 }
