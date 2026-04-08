@@ -161,6 +161,6 @@ jobs:
         working-directory: infra/terraform
 
       - name: Terraform apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
         run: terraform apply -auto-approve tfplan
         working-directory: infra/terraform
