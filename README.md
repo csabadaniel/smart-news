@@ -48,6 +48,7 @@ Build a reliable scheduled service that prompts Gemini and sends the generated r
 | 07  | Implement Infrastructure as Code (IaC)                    | iteration/07-iac                            | Completed   |
 | 08  | Fix Cloud Run Artifact Registry pull permissions          | iteration/08-fix-cloud-run-ar-reader        | Completed   |
 | 09  | Fix Terraform Cloud Run drift from gcloud metadata        | iteration/09-fix-terraform-cloud-run-drift  | Completed   |
+| 10  | Schedule email delivery                                   | iteration/10-schedule-emails                | In Progress |
 
 ## Deploy to GCP Cloud Run
 
