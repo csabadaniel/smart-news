@@ -108,14 +108,14 @@ resource "google_project_iam_binding" "runner_parameter_accessor" {
   members = ["serviceAccount:${google_service_account.cloud_run.email}"]
 }
 
-# ── Guard against roles/editor re-grant ──────────────────────────────────────
-# GCP auto-grants roles/editor to the default Compute SA on project creation.
-# This authoritative binding locks the role to zero members so any out-of-band
-# grant causes `terraform plan` to flag drift.
-resource "google_project_iam_binding" "no_editor" {
+# ── Guard against default SA over-privileging ────────────────────────────────
+# GCP auto-grants roles/editor to default service accounts on project creation.
+# Deprivilege those default SAs directly rather than using an authoritative
+# project-wide roles/editor binding, which would remove editor from every
+# principal in the project.
+resource "google_project_default_service_accounts" "deprivilege_defaults" {
   project = var.project_id
-  role    = "roles/editor"
-  members = []
+  action  = "DEPRIVILEGE"
 }
 
 # ── Workload Identity Federation — deployer ───────────────────────────────────
@@ -132,7 +132,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   workload_identity_pool_provider_id = "github-provider"
   display_name                       = "GitHub Provider"
 
-  attribute_condition = "assertion.repository=='${var.github_repo}'"
+  attribute_condition = "assertion.repository=='${var.github_repo}' && assertion.ref=='refs/heads/main'"
 
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
@@ -222,51 +222,17 @@ resource "google_cloud_run_v2_service" "smart_news" {
         value = "gcp"
       }
 
-      env {
-        name = "GEMINI_API_KEY"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.gemini_api_key.secret_id
-            version = "latest"
-          }
-        }
-      }
-
-      env {
-        name = "SENDGRID_API_KEY"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.sendgrid_api_key.secret_id
-            version = "latest"
-          }
-        }
-      }
-
-      env {
-        name = "SENDGRID_FROM_EMAIL"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.sender_email.secret_id
-            version = "latest"
-          }
-        }
-      }
-
-      env {
-        name = "SENDGRID_TO_EMAIL"
-        value_source {
-          secret_key_ref {
-            secret  = google_secret_manager_secret.recipient_email.secret_id
-            version = "latest"
-          }
-        }
-      }
     }
   }
 
+  # Secrets are fetched at runtime via sm:// placeholders in the gcp Spring
+  # profile; no secret env vars needed here.
   depends_on = [
     google_project_service.apis,
-    google_project_iam_member.runner_secret_accessor,
+    google_secret_manager_secret_iam_member.runner_gemini_api_key,
+    google_secret_manager_secret_iam_member.runner_sendgrid_api_key,
+    google_secret_manager_secret_iam_member.runner_sender_email,
+    google_secret_manager_secret_iam_member.runner_recipient_email,
     google_project_iam_binding.runner_parameter_accessor,
   ]
 
